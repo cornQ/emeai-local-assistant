@@ -14,6 +14,10 @@ Safe document and image attachment testing
 A starter project for Chrome built in AI experiments
 ```
 
+## Screenshot
+
+![emeAI Dashboard](./screenshots/dashboad.png)
+
 ## Version
 
 Current version:
