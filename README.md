@@ -292,29 +292,6 @@ Browser file reading behaves properly
 The version can show in the sidebar
 ```
 
-## Check that version display works
-
-Open DevTools Console on the app page and run:
-
-```js
-await fetch("./CHANGELOG.json").then(r => r.json())
-```
-
-You should see:
-
-```text
-version: 1.0.1
-channel: Beta
-label: Initial release
-displayVersion: v1.0.1 Beta (Initial release)
-```
-
-The left sidebar should show:
-
-```text
-v1.0.1 Beta (Initial release)
-```
-
 ## How to use the app
 
 ### New chat
