@@ -16,7 +16,7 @@ A starter project for Chrome built in AI experiments
 
 ## Screenshot
 
-![emeAI Dashboard](./screenshots/dashboad.png)
+![emeAI Dashboard](./screenshots/dashboard.png)
 
 ## Version
 
