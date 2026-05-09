@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com https://unpkg.com; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src https://fonts.gstatic.com; img-src 'self' blob: data:; connect-src 'self' https://cdnjs.cloudflare.com https://unpkg.com; worker-src 'self' blob: https://cdnjs.cloudflare.com;" />
+  <title>emeAI - Your Private Assistant</title>
+  <link rel="icon" href="./assets/emeai-icon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body data-theme="dark">
+  <main class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brandLogoRow">
+          <div class="brandMain">
+            <img class="brandIcon" src="./assets/emeai-icon.svg" alt="emeAI icon" />
+            <h1 class="brandWordmark"><span class="emePart">eme</span><span class="aiPart">AI</span></h1>
+          </div>
+          <button class="iconOnlyButton brandThemeButton" id="themeToggleButton" title="Toggle theme" aria-label="Toggle theme">
+            <span class="themeIcon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20.2 14.4C18.9 15.1 17.4 15.5 15.8 15.5C10.8 15.5 6.7 11.4 6.7 6.4C6.7 4.8 7.1 3.3 7.8 2C4.3 3.4 1.8 6.8 1.8 10.8C1.8 16 6 20.2 11.2 20.2C15.2 20.2 18.6 17.7 20.2 14.4Z" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </button>
+        </div>
+        <p class="brandTagline">Your Private Assistant</p>
+      </div>
+
+      <button class="primaryButton" id="newChatButton">New chat</button>
+      <input class="searchBox" id="chatSearch" type="search" placeholder="Search chats" />
+
+      <section class="historySection">
+        <div class="sectionLabel">Chats</div>
+        <div class="history" id="historyList"></div>
+      </section>
+
+      <section class="sidebarFooter">
+        <div class="sidebarNote">
+          Private local AI chat with theme control, chat actions, trash, and JSON backup.
+        </div>
+        <button class="utilityButton dangerButton" id="trashViewButton">
+          <span class="iconSvg" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 3H15M4 7H20M7 7L8 19C8.08 20.1 8.98 21 10.08 21H13.92C15.02 21 15.92 20.1 16 19L17 7M10 11V17M14 11V17" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span>Trash</span>
+        </button>
+      </section>
+
+      <section class="versionPanel" aria-label="App version">
+        <span>Version</span>
+        <strong id="appVersion">v...</strong>
+      </section>
+
+      <input id="importJsonInput" type="file" accept="application/json" hidden />
+    </aside>
+
+    <section class="main">
+      <header class="topbar">
+        <div class="topbarTitle">
+          <strong id="activeTitle">New chat</strong>
+          <span id="activeSubtitle">Model Ready</span>
+        </div>
+
+        <div class="topbarActions">
+          <button class="modeToggleButton" id="densityToggleButton" title="Switch to compact mode">Compact Off</button>
+          <div class="statusPill">
+            <span class="statusDot" id="statusDot"></span>
+            <span id="statusText">Model Ready</span>
+          </div>
+        </div>
+      </header>
+
+      <section class="chatArea" id="chatArea">
+        <div class="emptyState" id="emptyState">
+          <div class="heroBadge">emeAI</div>
+          <h2>Start a private local AI chat</h2>
+          <p>A clean AI workspace for writing help, coding support, summaries, and practical ideas.</p>
+          <div class="promptGrid">
+            <button class="promptCard" data-prompt="Explain web hosting in simple words.">
+              <strong>Explain hosting</strong>
+              <span>Simple explanation for beginners.</span>
+            </button>
+            <button class="promptCard" data-prompt="Write a short professional email to a client about hosting renewal.">
+              <strong>Client email</strong>
+              <span>Write a clean client message.</span>
+            </button>
+            <button class="promptCard" data-prompt="Give me five business growth ideas for a hosting company.">
+              <strong>Growth ideas</strong>
+              <span>Generate practical business ideas.</span>
+            </button>
+            <button class="promptCard" data-prompt="Summarize this in simple English: Chrome local AI can run prompts inside the browser.">
+              <strong>Summarize</strong>
+              <span>Make complex text simple.</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="composerWrap">
+        <div class="attachmentBar" id="attachmentBar" hidden></div>
+        <div class="composer">
+          <textarea id="userInput" rows="1" placeholder="Message emeAI..."></textarea>
+          <button id="fileButton" class="fileButton" title="Attach document or image" aria-label="Attach document or image">
+            <span class="fileIcon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12.2 12L9.8 14.4C8.7 15.5 6.9 15.5 5.8 14.4C4.7 13.3 4.7 11.5 5.8 10.4L11.2 5C13 3.2 16 3.2 17.8 5C19.6 6.8 19.6 9.8 17.8 11.6L11.5 17.9C9 20.4 4.9 20.4 2.4 17.9C-0.1 15.4 -0.1 11.3 2.4 8.8L8.5 2.7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </button>
+          <input id="fileInput" type="file" multiple hidden accept=".txt,.md,.pdf,.docx,.png,.jpg,.jpeg,.webp" />
+          <button id="voiceButton" class="voiceButton" title="Voice to text" aria-label="Voice to text">
+            <span class="voiceIcon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 14C13.66 14 15 12.66 15 11V6C15 4.34 13.66 3 12 3C10.34 3 9 4.34 9 6V11C9 12.66 10.34 14 12 14Z" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M18 11C18 14.31 15.31 17 12 17C8.69 17 6 14.31 6 11M12 17V21M9 21H15" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </button>
+          <button id="stopButton" class="stopButton" title="Stop generation" aria-label="Stop generation" hidden>
+            <span class="stopIcon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <rect x="6" y="6" width="12" height="12" rx="2"></rect>
+              </svg>
+            </span>
+          </button>
+          <button id="sendButton" title="Send">
+            <span class="sendIcon">➜</span>
+          </button>
+        </div>
+        <p class="hint">Enter sends. Shift plus Enter creates a new line. Public guard is on. Attach TXT, PDF, DOCX, PNG, JPG, or WEBP only.</p>
+      </section>
+    </section>
+  </main>
+
+  <div class="floatingMenu" id="floatingMenu" hidden></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://unpkg.com/mammoth@1.8.0/mammoth.browser.min.js"></script>
+  <script src="./js/app.js"></script>
+</body>
+</html>

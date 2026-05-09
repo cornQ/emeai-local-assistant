@@ -1,0 +1,14 @@
+{
+  "version": "1.0.2",
+  "channel": "Beta",
+  "label": "PowerShell setup note",
+  "displayVersion": "v1.0.2 Beta",
+  "released": "2026-05-10",
+  "name": "PowerShell Setup Note",
+  "changes": [
+    "Added a clear PowerShell note for opening the project folder.",
+    "Highlighted that cd /d is a CMD command, not a PowerShell command.",
+    "Added a quick fix for the Directory listing page issue.",
+    "Updated README current version."
+  ]
+}
