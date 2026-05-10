@@ -1,18 +1,8 @@
-# emeAI
+# emeAI Local Assistant
 
-emeAI is a small local AI chat app that runs inside Google Chrome. It is made for people who want a private writing, learning, coding, and document review space without setting up a cloud API.
+emeAI Local Assistant is a private browser based AI chat app for Google Chrome. It uses Chrome built in local AI through the `LanguageModel` API, so you can test AI chat, writing help, summaries, coding help, and document review without setting up a cloud API.
 
-The app uses Chrome built in local AI through the `LanguageModel` API. Your chats stay in your browser storage. Files are read inside the browser as safe text or image data. There is no backend in this release.
-
-This project is useful when you want:
-
-```text
-A simple local AI chat workspace
-A clean UI that is easy to edit
-Private browser based chat history
-Safe document and image attachment testing
-A starter project for Chrome built in AI experiments
-```
+The app has no backend in this beta release. Chats are stored in your browser through localStorage. Approved files are read inside the browser as text or image data.
 
 ## Screenshot
 
@@ -20,241 +10,229 @@ A starter project for Chrome built in AI experiments
 
 ## Version
 
-Current version:
+v1.0.3 Beta
 
-```text
-v1.0.2 Beta
-```
+The app reads the visible version from `CHANGELOG.json` and shows it at the bottom of the left sidebar.
 
-The app dashboard reads the version from:
+For release history, see [`CHANGELOG.md`](./CHANGELOG.md).
 
-```text
-CHANGELOG.json
-```
+## What you can do with it
 
-The left sidebar shows the version automatically when the app runs on `localhost`.
-
-For GitHub readers, a normal changelog is also available here:
-
-```text
-CHANGELOG.md
-```
+- Chat with Chrome local AI
+- Keep chat history in your browser
+- Search and rename chats
+- Export or import a single chat as JSON
+- Move chats to trash, restore them, or delete them forever
+- Use dark mode, light mode, compact mode, and regular mode
+- Use voice to text input
+- Stop a running generation
+- Resume unfinished text prompts after reload
+- Attach safe documents and images
+- Debug Chrome local AI availability from the browser Console
 
 ## Feature list
 
-```text
-Local Chrome AI chat
-Chat history saved in browser localStorage
-Search chats
-Rename chats
-Export single chat JSON
-Import single chat JSON
-Move chats to trash
-Restore chats from trash
-Delete chats forever
-Dark mode
-Light mode
-Compact mode
-Regular mode
-Voice to text
-Stop generation
-Reload resume for unfinished text prompts
-Safe file attachments
-TXT and MD reading
-PDF text extraction
-DOCX text extraction
-Image attachment support for supported Chrome builds
-Strict public file guard
-Dynamic version display from CHANGELOG.json
-```
+- Local Chrome AI chat
+- Chat history saved in browser localStorage
+- Search chats
+- Rename chats
+- Export single chat JSON
+- Import single chat JSON
+- Move chats to trash
+- Restore chats from trash
+- Delete chats forever
+- Dark mode
+- Light mode
+- Compact mode
+- Regular mode
+- Voice to text
+- Stop generation
+- Reload resume for unfinished text prompts
+- Safe file attachments
+- TXT and MD reading
+- PDF text extraction
+- DOCX text extraction
+- Image attachment support for supported Chrome builds
+- Strict public file guard
+- Dynamic version display from `CHANGELOG.json`
+- Console debug helper for model availability checks
+- Chrome crash toast with relaunch instruction
+
+## Supported attachments
+
+Allowed in public mode:
+
+- TXT
+- MD
+- PDF
+- DOCX
+- PNG
+- JPG
+- JPEG
+- WEBP
+
+Blocked by design:
+
+- Executable files
+- Installers
+- Scripts
+- Archives
+- Macro enabled Office files
+- SVG files
+- Code files
+- Unknown files without an extension
+
+The app does not run uploaded files. It reads approved documents as text and approved images as browser decoded image data.
+
+## Attachment limits
+
+- Max files per message: 5
+- Max file size: 10 MB
+- Max total attachment size: 25 MB
+- Max image resolution: about 12 megapixels
+- Max extracted document text: 12000 characters per file
+
+These values are defined in `js/app.js`.
+
+## Privacy
+
+emeAI is local first in this beta release.
+
+- Chats are saved in browser localStorage
+- Files are read in the browser
+- There is no backend
+- There is no login system
+- There is no cloud sync
+
+If you add a backend, login, cloud sync, analytics, or remote file upload later, update the privacy and security notes.
+
+## Project files
+
+- `CHANGELOG.json`: app version source for the sidebar
+- `CHANGELOG.md`: release history for GitHub readers
+- `LICENSE`: MIT License text
+- `README.md`: project guide
+- `index.html`: app layout and script links
+- `assets/emeai-icon.svg`: favicon and sidebar icon
+- `assets/emeai-logo.svg`: logo asset
+- `css/style.css`: all visual styles
+- `js/app.js`: app logic
+
+Main folders:
+
+- `assets`
+- `css`
+- `js`
+
+## Requirements
+
+Install or prepare these first:
+
+- Google Chrome with built in AI support
+- Python 3
+- VS Code or another code editor
+- Git, only if you want to publish or contribute
+
+Python is used only to run a small local web server. The app itself is plain HTML, CSS, and JavaScript.
 
 ## Recommended project location
 
-Do not keep the project inside `Downloads`, `Desktop`, or Chrome's user data folder.
+Do not keep the project inside Downloads, Desktop, or Chrome's user data folder.
 
-Recommended Windows location:
+Recommended Windows locations:
 
-```text
-C:\Projects\emeAI
-```
-
-Another simple Windows path is also fine:
-
-```text
-C:\project\emeAI
-```
+- `C:\Projects\emeAI`
+- `C:\project\emeAI`
 
 Recommended CORNQ workspace location:
 
-```text
-C:\Projects\CORNQ\emeAI
-```
+- `C:\Projects\CORNQ\emeAI`
 
 Recommended macOS or Linux location:
 
-```text
-~/Projects/emeAI
-```
+- `~/Projects/emeAI`
 
-Good project location helps with:
+A clean project location makes terminal commands easier and helps avoid permission issues.
 
-```text
-Cleaner terminal commands
-Fewer permission problems
-Easier Git setup
-Less chance of deleting files by mistake
-```
+## Chrome setup
 
-## Required software
-
-Install or prepare:
-
-```text
-Google Chrome with built in AI support
-Python 3
-VS Code or any code editor
-Git, only if you want to publish on GitHub
-```
-
-Python is only used to run a local web server. The app itself is plain HTML, CSS, and JavaScript.
-
-## Chrome setup for local AI
-
-Open Chrome and go to:
+Open Chrome flags:
 
 ```text
 chrome://flags
 ```
 
-Enable these flags:
+Enable these flags if they are available in your Chrome build:
 
-```text
-Prompt API for Gemini Nano with Multimodal Input
-Enables optimization guide on device
-```
+- Prompt API for Gemini Nano with Multimodal Input
+- Enables optimization guide on device
 
-Relaunch Chrome after enabling the flags.
+Then relaunch Chrome.
 
-If the exact names change in your Chrome build, search in `chrome://flags` using:
+If the flag names change, search with these words inside `chrome://flags`:
 
-```text
-Prompt API
-Gemini Nano
-Optimization Guide
-On Device Model
-```
+- Prompt API
+- Gemini Nano
+- Optimization Guide
+- On Device Model
 
-## Activate and test from Console
+## Check Chrome local AI from Console
 
-Open any normal Chrome tab, then open DevTools:
-
-```text
-Right click
-Inspect
-Console
-```
-
-Check availability:
+Open DevTools Console in Chrome and run this basic check:
 
 ```js
 await LanguageModel.availability()
 ```
 
-Possible results:
+Common results:
 
-```text
-available
-downloadable
-downloading
-unavailable
-```
+- `available`: the local model is ready
+- `downloadable`: Chrome can download the local model
+- `downloading`: Chrome is downloading the local model
+- `unavailable`: the current Chrome setup cannot use it right now
 
-Meaning:
-
-```text
-available      The local model is ready.
-downloadable   Chrome can download the local model.
-downloading    Chrome is downloading the local model.
-unavailable    Your current Chrome setup or device cannot use it right now.
-```
-
-If it returns `downloadable` or `available`, test with:
+For text chat, use this check:
 
 ```js
-const session = await LanguageModel.create()
+await LanguageModel.availability({
+  expectedOutputs: [{ type: "text", languages: ["en"] }]
+})
+```
+
+To test a direct prompt:
+
+```js
+const session = await LanguageModel.create({
+  expectedOutputs: [{ type: "text", languages: ["en"] }]
+})
+
 await session.prompt("Say hello in one short sentence.")
 ```
 
-The first run may trigger a model download. Wait for Chrome to finish.
+## Install and run locally
 
-## Install on local PC
+### 1. Copy the files
 
-### Step 1: Create a project folder
+Extract the project ZIP and copy the files to your chosen project folder.
 
-Windows PowerShell:
+### 2. Open terminal in the project folder
 
-```powershell
-mkdir C:\Projects
-mkdir C:\Projects\emeAI
-```
-
-macOS or Linux:
-
-```bash
-mkdir -p ~/Projects/emeAI
-```
-
-### Step 2: Copy files into the folder
-
-After extracting the zip, your folder should look like this:
-
-```text
-emeAI
-├── CHANGELOG.json
-├── CHANGELOG.md
-├── LICENSE
-├── README.md
-├── index.html
-├── assets
-│   ├── emeai-icon.svg
-│   └── emeai-logo.svg
-├── css
-│   └── style.css
-└── js
-    └── app.js
-```
-
-### Step 3: Open terminal in the project folder
-
-Windows PowerShell:
+PowerShell example:
 
 ```powershell
-cd C:\Projects\emeAI
+cd C:\project\emeAI
 ```
 
-Important for PowerShell:
+PowerShell reminder:
 
-```text
-Do not use cd /d in PowerShell.
-cd /d is for CMD, not PowerShell.
-```
-
-Wrong in PowerShell:
-
-```powershell
-cd /d C:\Projects\emeAI
-```
-
-Correct in PowerShell:
-
-```powershell
-cd C:\Projects\emeAI
-```
+- Correct: `cd C:\project\emeAI`
+- Wrong in PowerShell: `cd /d C:\project\emeAI`
+- `cd /d` is for CMD, not PowerShell
 
 CMD users can use:
 
 ```cmd
-cd /d C:\Projects\emeAI
+cd /d C:\project\emeAI
 ```
 
 macOS or Linux:
@@ -263,421 +241,231 @@ macOS or Linux:
 cd ~/Projects/emeAI
 ```
 
-### Step 4: Start local server
-
-Run:
+### 3. Start the local server
 
 ```bash
 python -m http.server 8000
 ```
 
-If your system uses `python3`, run:
+If your system uses `python3`:
 
 ```bash
 python3 -m http.server 8000
 ```
 
-### Step 5: Open the app
+### 4. Open the app
 
-Open Chrome:
+Open this URL in Chrome:
 
 ```text
 http://localhost:8000/
 ```
 
-Do not open the app with `file://`.
-
-Use `localhost` because:
-
-```text
-Chrome local AI works better there
-CHANGELOG.json can be loaded
-Browser file reading behaves properly
-The version can show in the sidebar
-```
+Do not open `index.html` directly with `file://`. Use `localhost` so the browser can load `CHANGELOG.json`, file reading works properly, and Chrome local AI behaves more reliably.
 
 ## How to use the app
 
 ### New chat
 
-Click:
+Click **New chat**.
 
-```text
-New chat
-```
+### Send a message
 
-### Send message
+Type your message and press **Enter**.
 
-Type a message and press:
-
-```text
-Enter
-```
-
-For a new line, press:
-
-```text
-Shift + Enter
-```
+Use **Shift + Enter** for a new line.
 
 ### Stop generation
 
-When the model is generating, the send button changes to a stop button.
-
-Click stop to cancel the current generation.
+When the model is generating, click the stop button in the composer.
 
 ### Voice to text
 
-Click the microphone button.
-
-Chrome may ask for microphone permission. Allow it only if you want voice input.
+Click the microphone button. Chrome may ask for microphone permission.
 
 ### Attach files
 
-Click the attach button beside the message box.
+Click the attach button beside the message box and select supported files.
 
-Allowed files in public mode:
+Text chat does not need image input support. Image input support is only needed when you attach an image.
 
-```text
-TXT
-MD
-PDF
-DOCX
-PNG
-JPG
-JPEG
-WEBP
+## Troubleshoot
+
+### Browser shows Directory listing for /
+
+This means the local server is running from the wrong folder.
+
+Stop the server with **Ctrl + C**, then go to the folder that contains `index.html`.
+
+PowerShell example:
+
+```powershell
+cd C:\project\emeAI
+dir
+python -m http.server 8000
 ```
 
-Blocked files include:
+Before starting the server, `dir` should show files like `index.html`, `CHANGELOG.json`, `css`, `js`, and `assets`.
 
-```text
-Executable files
-Installers
-Scripts
-Archives
-Macro enabled Office files
-SVG files
-Code files
-Unknown extensionless files
-```
+### Version shows v0.0.0-local
 
-The app reads approved documents as text. It reads approved images as browser decoded image data. It does not run uploaded files.
+You probably opened the app with `file://`.
 
-## Attachment limits
+Start the local server and open `http://localhost:8000/`.
 
-```text
-Max files per message: 5
-Max file size: 10 MB
-Max total attachment size: 25 MB
-Max image resolution: about 12 megapixels
-Max extracted document text: 12000 characters per file
-```
+### Model does not work
 
-These values are in:
-
-```text
-js/app.js
-```
-
-Look for:
+Run this in Console:
 
 ```js
-MAX_FILES_PER_MESSAGE
-MAX_FILE_SIZE_BYTES
-MAX_TOTAL_FILE_SIZE_BYTES
-MAX_IMAGE_PIXELS
-MAX_ATTACHMENT_TEXT_CHARS
+await LanguageModel.availability()
 ```
 
-## Public safety notes
+Check Chrome version, Chrome flags, model download status, device support, and available storage.
 
-The upload guard checks files before reading them.
+### Console says available, but the app shows Model Error
 
-It checks:
+Run the built in debug helper from the app page:
+
+```js
+await emeAIDebugModel()
+```
+
+It returns:
+
+- `basicAvailability`
+- `textAvailability`
+- `imageAvailability`
+- `appVersion`
+
+If basic availability is available, but the app still fails, Chrome may be rejecting a session option or the model process may have crashed. This version tries a simpler session automatically and retries once for destroyed session errors.
+
+### Chrome local AI crashes too many times
+
+If Console shows this warning:
 
 ```text
-File extension
-Risky file type
-Double extension tricks
-File size
-Total file size
-Image MIME type
-Image resolution
+The model process crashed too many times for this version.
 ```
 
-It also strips some unsafe text patterns after document extraction.
+The app will show a toast asking you to relaunch Google Chrome.
 
-Important:
+On Windows, fully close Chrome with:
 
-```text
-The app never executes uploaded files.
+```powershell
+taskkill /F /IM chrome.exe
 ```
 
-For future backend work:
+Then open Chrome again, visit `http://localhost:8000/`, and start a new chat.
 
-```text
-Repeat all file checks on the server.
-Do not trust browser checks as the only security layer.
-```
+### PDF or DOCX does not read
 
-## Change app name, logo, and favicon
+This build uses browser loaded helper libraries for PDF and DOCX reading. Check your internet connection, CDN script loading, and Console errors.
 
-You are allowed to modify the app name, logo, and favicon.
+For full offline use, download the helper libraries and update the script paths in `index.html`.
 
-### Change app name in HTML
+### Image upload gives a model error
 
-Open:
+Image support depends on your Chrome Prompt API build.
 
-```text
-index.html
-```
+Normal text prompts and document text reading can still work even if image input is not available.
 
-Find:
+### Microphone does not work
+
+Check Chrome microphone permission, SpeechRecognition support, and make sure the app is opened from `localhost`.
+
+### Old UI appears after replacing files
+
+Hard refresh Chrome with **Ctrl + Shift + R**.
+
+You can also open DevTools, right click the reload button, then choose **Empty Cache and Hard Reload**.
+
+## Development
+
+### Change app name
+
+Open `index.html` and update the page title and brand text:
 
 ```html
 <title>emeAI - Your Private Assistant</title>
-```
-
-Change it to your app name.
-
-Find:
-
-```html
 <h1 class="brandWordmark"><span class="emePart">eme</span><span class="aiPart">AI</span></h1>
 ```
 
-Change the text inside the spans.
+You can also update empty state text inside `index.html`.
 
-Also update the empty state text if needed:
+In `js/app.js`, search for `emeAI` and update user facing text only. Do not change storage keys unless you want a fresh browser storage namespace.
 
-```html
-<div class="heroBadge">emeAI</div>
-<h2>Start a private local AI chat</h2>
-```
+Current storage keys:
 
-### Change app name in JavaScript text
+- `emeAI.core.chats.v2`
+- `emeAI.core.activeChat.v2`
+- `emeAI.core.theme.v1`
+- `emeAI.core.density.v1`
 
-Open:
+Changing storage keys will make old local chats not appear under the new key.
 
-```text
-js/app.js
-```
+### Change logo and favicon
 
-Search for:
-
-```text
-emeAI
-```
-
-Update user facing text only. Do not change storage keys unless you want a fresh browser storage namespace.
-
-Current storage keys include:
-
-```js
-emeAI.core.chats.v2
-emeAI.core.activeChat.v2
-emeAI.core.theme.v1
-emeAI.core.density.v1
-```
-
-Changing these keys will make old local chats not appear under the new key.
-
-### Change favicon
-
-Replace this file:
-
-```text
-assets/emeai-icon.svg
-```
-
-Or edit this line in `index.html`:
+To change the favicon, replace `assets/emeai-icon.svg` or update this line in `index.html`:
 
 ```html
 <link rel="icon" href="./assets/emeai-icon.svg" type="image/svg+xml" />
 ```
 
-Use your own file path.
+To change the sidebar logo, replace:
 
-### Change logo
+- `assets/emeai-icon.svg`
+- `assets/emeai-logo.svg`
 
-Replace these files:
-
-```text
-assets/emeai-icon.svg
-assets/emeai-logo.svg
-```
-
-The current sidebar uses:
+The current sidebar icon is loaded from:
 
 ```html
 <img class="brandIcon" src="./assets/emeai-icon.svg" alt="emeAI icon" />
 ```
 
-If you want to use a full logo image instead of text, edit the brand area in `index.html`.
-
 ### Change colors
 
-Open:
-
-```text
-css/style.css
-```
-
-At the top, update the CSS variables inside:
-
-```css
-:root {
-}
-```
+Open `css/style.css` and update the CSS variables near the top.
 
 Common variables to change:
 
-```text
---accent
---accent2
---bg
---panel
---text
---muted
-```
+- `--accent`
+- `--accent2`
+- `--bg`
+- `--panel`
+- `--text`
+- `--muted`
 
-## Project files
+### Update version
 
-### index.html
-
-Contains:
-
-```text
-Sidebar
-Topbar
-Chat area
-Composer
-File attach input
-Voice button
-Stop button
-Version display
-Script links
-```
-
-### css/style.css
-
-Contains:
-
-```text
-Theme styles
-Layout
-Sidebar
-Chat bubbles
-Composer
-Attachment chips
-Stop button
-Version panel
-Responsive layout
-```
-
-### js/app.js
-
-Contains:
-
-```text
-Chat storage
-Message rendering
-Chrome LanguageModel session
-Prompt sending
-Stop generation
-Reload resume
-Attachment guard
-File reading
-Voice to text
-Theme toggle
-Compact mode
-Trash
-Import and export
-Version loader
-```
-
-### CHANGELOG.json
-
-Used by the app to show the version.
-
-### CHANGELOG.md
-
-Used by GitHub readers to understand release history.
-
-### LICENSE
-
-MIT License for public use.
-
-## Update version number
-
-Open:
-
-```text
-CHANGELOG.json
-```
-
-Update:
+Update the version in `CHANGELOG.json`:
 
 ```json
 {
-  "version": "1.0.2",
+  "version": "1.0.3",
   "channel": "Beta",
-  "label": "Next update",
-  "displayVersion": "v1.0.2 Beta (Next update)"
+  "displayVersion": "v1.0.3 Beta"
 }
 ```
 
-Then update:
+Also update `CHANGELOG.md` before publishing a release.
 
-```text
-CHANGELOG.md
-README.md
-```
+### GitHub setup
 
-Reload the app on:
-
-```text
-http://localhost:8000/
-```
-
-The sidebar should show the new version.
-
-## GitHub setup
-
-Open terminal inside the project folder:
+Only use this when you are ready to publish the project to GitHub.
 
 ```bash
 git init
 git add .
 git commit -m "Initial beta release"
-```
-
-Add your GitHub remote:
-
-```bash
-git remote add origin https://github.com/your-username/emeAI.git
+git remote add origin https://github.com/your-username/emeai-local-assistant.git
 git branch -M main
 git push -u origin main
 ```
 
-Replace:
+Replace `your-username` with your GitHub username.
 
-```text
-your-username
-```
-
-with your GitHub username.
-
-## Suggested .gitignore
-
-Create:
-
-```text
-.gitignore
-```
-
-Suggested content:
+Suggested `.gitignore`:
 
 ```gitignore
 .DS_Store
@@ -691,185 +479,13 @@ build/
 .env
 ```
 
-## Common issues
-
-### Browser shows Directory listing for /
-
-This means the local server is running from the wrong folder.
-
-Stop the server first:
-
-```text
-Ctrl + C
-```
-
-Then go to the folder that contains `index.html`.
-
-PowerShell example:
-
-```powershell
-cd C:\Projects\emeAI
-dir
-python -m http.server 8000
-```
-
-Before starting the server, `dir` should show:
-
-```text
-index.html
-CHANGELOG.json
-css
-js
-assets
-```
-
-If you see only user folders like `Desktop`, `Documents`, or `Downloads`, you are in the wrong folder.
-
-PowerShell reminder:
-
-```text
-Use cd C:\Projects\emeAI
-Do not use cd /d C:\Projects\emeAI
-```
-
-### Model does not work
-
-Run:
-
-```js
-await LanguageModel.availability()
-```
-
-Check:
-
-```text
-Chrome version
-Chrome flags
-Device support
-Available storage
-Model download status
-```
-
-### Version shows v0.0.0-local
-
-You probably opened the app with `file://`.
-
-Run:
-
-```bash
-python -m http.server 8000
-```
-
-Then open:
-
-```text
-http://localhost:8000/
-```
-
-### PDF or DOCX does not read
-
-This build uses browser loaded helper libraries for PDF and DOCX reading.
-
-Check:
-
-```text
-Internet connection
-CDN script loading
-Browser Console errors
-```
-
-For full offline use, download the helper libraries and update script paths in `index.html`.
-
-### Image upload gives a model error
-
-Image support depends on your Chrome Prompt API build.
-
-Text prompts and document text reading can still work even if image input is not available.
-
-### Microphone does not work
-
-Check:
-
-```text
-Chrome microphone permission
-SpeechRecognition support
-localhost URL
-```
-
-### Old UI appears after replacing files
-
-Hard refresh Chrome:
-
-```text
-Ctrl + Shift + R
-```
-
-Or use:
-
-```text
-DevTools
-Right click reload
-Empty Cache and Hard Reload
-```
-
-## Before publishing a new release
-
-Check:
-
-```text
-Open the app on localhost
-Send a text prompt
-Stop a running generation
-Switch theme
-Switch compact mode
-Rename a chat
-Move a chat to trash
-Restore a chat
-Attach a TXT or MD file
-Attach a PDF file
-Attach a DOCX file
-Attach one image if your Chrome build supports it
-Update CHANGELOG.json
-Update CHANGELOG.md
-Update README.md current version
-Run node syntax check
-```
-
-Syntax check:
-
-```bash
-node --check js/app.js
-```
-
-
-## Privacy note
-
-emeAI is local first in this beta release.
-
-```text
-Chats are saved in browser localStorage
-Files are read in the browser
-There is no backend
-There is no login system
-There is no cloud sync
-```
 
 ## License
 
 This project is released under the **MIT License**.
 
-That means people are allowed to:
-
-```text
-Use it
-Copy it
-Modify it
-Publish it
-Distribute it
-Use it in private or commercial projects
-```
+People are allowed to use, copy, modify, publish, distribute, and use the project in private or commercial projects.
 
 Please keep the original license notice when copying or publishing this project.
 
-See the full license text in the [LICENSE](./LICENSE) file.
-
+See the full license text in [`LICENSE`](./LICENSE).

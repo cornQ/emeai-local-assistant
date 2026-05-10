@@ -17,9 +17,13 @@ const DENSITY_KEY = "emeAI.core.density.v1";
 const CHANGELOG_URL = "./CHANGELOG.json";
 
 // Chrome local model setup
-const aiOptions = {
+const textAiOptions = {
+  expectedOutputs: [{ type: "text", languages: ["en"] }]
+};
+
+const imageAiOptions = {
   expectedInputs: [
-    { type: "text", languages: ["en"] },
+    { type: "text" },
     { type: "image" }
   ],
   expectedOutputs: [{ type: "text", languages: ["en"] }]
@@ -55,6 +59,7 @@ const dom = {
 
 // Runtime state
 let session = null;
+let imageSession = null;
 let chats = [];
 let activeChatId = null;
 let isBusy = false;
@@ -1277,8 +1282,8 @@ async function handleFilesSelected(files) {
   setStatus("Model Ready", "ready");
 }
 
-function buildAttachmentContext() {
-  const docs = attachments.filter(function(item) {
+function buildAttachmentContext(list) {
+  const docs = list.filter(function(item) {
     return item.type === "document";
   });
 
@@ -1294,9 +1299,10 @@ function buildAttachmentContext() {
   }).join("\n\n---\n\n");
 }
 
-function buildAttachmentPromptText(text) {
-  const docContext = buildAttachmentContext();
-  const imageCount = attachments.filter(function(item) {
+function buildAttachmentPromptText(text, list) {
+  const safeList = list || [];
+  const docContext = buildAttachmentContext(safeList);
+  const imageCount = safeList.filter(function(item) {
     return item.type === "image";
   }).length;
 
@@ -1355,7 +1361,7 @@ function buildImageContentParts(promptText, imageAttachments, valueKey, imageVal
 
 // Prompt payload builders
 function buildPromptAttempts(text, attachmentList) {
-  const promptText = buildAttachmentPromptText(text);
+  const promptText = buildAttachmentPromptText(text, attachmentList);
   const imageAttachments = attachmentList.filter(function(item) {
     return item.type === "image";
   });
@@ -1468,36 +1474,185 @@ function attachmentSummaryText() {
 
 
 
-// Chrome model session
-async function createSessionIfNeeded() {
-  if (session) return session;
+function createDownloadMonitor() {
+  return function monitor(target) {
+    target.addEventListener("downloadprogress", function(event) {
+      setStatus("Downloading " + Math.round(event.loaded * 100) + "%", "busy");
+    });
+  };
+}
 
+async function readModelAvailability(options) {
+  const attempts = options ? [options, null] : [null];
+  let lastResult = "unavailable";
+
+  for (const attemptOptions of attempts) {
+    try {
+      const result = attemptOptions
+        ? await LanguageModel.availability(attemptOptions)
+        : await LanguageModel.availability();
+
+      if (result !== "unavailable") {
+        return result;
+      }
+
+      lastResult = result;
+    } catch {
+      lastResult = "unavailable";
+    }
+  }
+
+  return lastResult;
+}
+
+async function createLanguageSession(options) {
+  const monitor = createDownloadMonitor();
+  const attempts = options
+    ? [
+        Object.assign({}, options, { monitor: monitor }),
+        { monitor: monitor },
+        null
+      ]
+    : [
+        { monitor: monitor },
+        null
+      ];
+
+  let lastError = null;
+
+  for (const createOptions of attempts) {
+    try {
+      return createOptions
+        ? await LanguageModel.create(createOptions)
+        : await LanguageModel.create();
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  throw lastError || new Error("Could not create Chrome local AI session.");
+}
+
+function resetModelSessions() {
+  session = null;
+  imageSession = null;
+}
+
+function getErrorText(error) {
+  return String(error && error.message ? error.message : error || "");
+}
+
+function isRetryableModelError(error) {
+  const message = getErrorText(error);
+  return /unknown|destroyed|session|invalid state|not available|unavailable|aborted/i.test(message);
+}
+
+// Chrome model session
+async function createSessionIfNeeded(needsImageInput) {
   if (!("LanguageModel" in window)) {
     throw new Error("LanguageModel API is not available. Enable Chrome local AI flags and relaunch Chrome.");
   }
 
-  setStatus("Checking model", "busy");
-  const availability = await LanguageModel.availability(aiOptions);
+  if (needsImageInput) {
+    if (imageSession) return imageSession;
 
-  if (availability === "unavailable") {
-    throw new Error("Chrome local AI model is unavailable in this setup.");
+    setStatus("Checking image model", "busy");
+    const imageAvailability = await readModelAvailability(imageAiOptions);
+
+    if (imageAvailability === "unavailable") {
+      throw new Error("Image input is not available in this Chrome setup. Text chat should still work. Check the Chrome multimodal flag, or send the prompt without image attachments.");
+    }
+
+    setStatus("Creating image session", "busy");
+    imageSession = await createLanguageSession(imageAiOptions);
+    setStatus("Ready", "ready");
+    return imageSession;
   }
 
-  setStatus("Creating session", "busy");
+  if (session) return session;
 
-  session = await LanguageModel.create({
-    expectedInputs: aiOptions.expectedInputs,
-    expectedOutputs: aiOptions.expectedOutputs,
-    monitor(target) {
-      target.addEventListener("downloadprogress", function(event) {
-        setStatus("Downloading " + Math.round(event.loaded * 100) + "%", "busy");
-      });
-    }
-  });
+  setStatus("Checking text model", "busy");
+  const textAvailability = await readModelAvailability(textAiOptions);
 
+  if (textAvailability === "unavailable") {
+    throw new Error("Chrome local AI text model is unavailable in this setup. Test await LanguageModel.availability() in Console, then relaunch Chrome if needed.");
+  }
+
+  setStatus("Creating text session", "busy");
+  session = await createLanguageSession(textAiOptions);
   setStatus("Ready", "ready");
   return session;
 }
+
+async function runPromptWithRetry(text, attachmentList, options) {
+  const needsImageInput = hasImageAttachments(attachmentList);
+  let lastError = null;
+
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const activeSession = await createSessionIfNeeded(needsImageInput);
+      return await promptWithAttachmentFallback(activeSession, text, attachmentList, options);
+    } catch (error) {
+      lastError = error;
+
+      if (isAbortLikeError(error)) {
+        throw error;
+      }
+
+      if (!isRetryableModelError(error) || attempt === 1) {
+        throw error;
+      }
+
+      resetModelSessions();
+      setStatus("Resetting model", "busy");
+    }
+  }
+
+  throw lastError || new Error("Chrome local AI request failed.");
+}
+
+async function runTextPromptWithRetry(text, options) {
+  let lastError = null;
+
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const activeSession = await createSessionIfNeeded(false);
+      return await activeSession.prompt(text, options);
+    } catch (error) {
+      lastError = error;
+
+      if (isAbortLikeError(error)) {
+        throw error;
+      }
+
+      if (!isRetryableModelError(error) || attempt === 1) {
+        throw error;
+      }
+
+      resetModelSessions();
+      setStatus("Resetting model", "busy");
+    }
+  }
+
+  throw lastError || new Error("Chrome local AI request failed.");
+}
+
+window.emeAIDebugModel = async function() {
+  if (!("LanguageModel" in window)) {
+    return {
+      hasLanguageModel: false,
+      message: "LanguageModel API is not available."
+    };
+  }
+
+  return {
+    hasLanguageModel: true,
+    basicAvailability: await readModelAvailability(null),
+    textAvailability: await readModelAvailability(textAiOptions),
+    imageAvailability: await readModelAvailability(imageAiOptions),
+    appVersion: dom.appVersion ? dom.appVersion.textContent : ""
+  };
+};
 
 // Main send flow
 async function sendMessage(customText, regenerate) {
@@ -1547,9 +1702,7 @@ async function sendMessage(customText, regenerate) {
   currentGenerationInfo = { chatId: sourceChatId, messageId: assistantMessage.id };
 
   try {
-    const activeSession = await createSessionIfNeeded();
-    attachments = activeAttachments;
-    const rawResponse = await promptWithAttachmentFallback(activeSession, text, activeAttachments, {
+    const rawResponse = await runPromptWithRetry(text, activeAttachments, {
       signal: currentPromptController.signal
     });
     clearAttachments();
@@ -1664,8 +1817,7 @@ async function resumePendingGeneration() {
   currentGenerationInfo = { chatId: job.chatId, messageId: job.messageId };
 
   try {
-    const activeSession = await createSessionIfNeeded();
-    const rawResponse = await activeSession.prompt(job.prompt, {
+    const rawResponse = await runTextPromptWithRetry(job.prompt, {
       signal: currentPromptController.signal
     });
     const response = normalizeMessageText(rawResponse);

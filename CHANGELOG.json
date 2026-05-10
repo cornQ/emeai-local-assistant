@@ -1,14 +1,16 @@
 {
-  "version": "1.0.2",
+  "version": "1.0.3",
   "channel": "Beta",
-  "label": "PowerShell setup note",
-  "displayVersion": "v1.0.2 Beta",
+  "label": "Beta",
+  "displayVersion": "v1.0.3 Beta",
   "released": "2026-05-10",
-  "name": "PowerShell Setup Note",
+  "name": "v1.0.3 Beta",
   "changes": [
-    "Added a clear PowerShell note for opening the project folder.",
-    "Highlighted that cd /d is a CMD command, not a PowerShell command.",
-    "Added a quick fix for the Directory listing page issue.",
-    "Updated README current version."
+    "Added fallback session creation for Chrome builds that reject strict model options.",
+    "Added one automatic retry when the Chrome local AI session is destroyed or returns an unknown session error.",
+    "Kept normal text chat separate from image input checks.",
+    "Added the emeAIDebugModel Console helper for model availability checks.",
+    "Added a toast message when Chrome local AI crashes too many times.",
+    "Added a copy button for the Windows Chrome close command inside the crash toast."
   ]
 }

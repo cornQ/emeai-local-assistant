@@ -1,67 +1,53 @@
 # Changelog
 
-All notable project changes are written here in plain language.
+Project changes are listed here in release order.
+
+## v1.0.3 Beta
+
+Released: 2026-05-10
+
+This release focuses on Chrome local AI session stability, clear debugging, and recovery guidance when the browser model process crashes.
+
+### Fixed
+
+- Normal text chat no longer depends on image input support.
+- The app tries a simpler Chrome model session if strict model options are rejected.
+- The app retries once when Chrome returns a destroyed session or unknown model session error.
+- Text chat and image input checks are handled separately.
+
+### Added
+
+- `emeAIDebugModel()` Console helper for checking:
+  - basic model availability
+  - text model availability
+  - image model availability
+  - current app version
+- Toast message when Chrome local AI crashes too many times.
+- Copy button for the Windows Chrome close command inside the crash toast.
+
+### Notes
+
+- If Chrome local AI crashes too many times, fully close Chrome and relaunch it.
+- Image attachment support still depends on the user's Chrome Prompt API build.
+- The visible app version format is `v1.0.3 Beta`.
 
 ## v1.0.2 Beta
 
 Released: 2026-05-10
 
-### Changed
-
-```text
-Added a clear PowerShell command note in README.md.
-Highlighted that cd /d works in CMD, not PowerShell.
-Added a fix note for the Directory listing page.
-Updated the app version shown from CHANGELOG.json.
-```
-
-## v1.0.1 Beta (Initial release)
-
-Released: 2026-05-10
-
-This is the first public beta release of emeAI.
+First public beta release.
 
 ### Added
 
-```text
-Local Chrome AI chat workspace
-Chat history saved in browser localStorage
-Search chats
-Rename chats
-Export and import single chat JSON
-Move chats to trash
-Restore chats from trash
-Delete chats forever
-Dark and light mode
-Compact and regular layout
-Voice to text
-Stop generation
-Reload resume for unfinished text prompts
-TXT and MD text attachment reading
-PDF text extraction
-DOCX text extraction
-Image attachment support for supported Chrome Prompt API builds
-Strict public file guard
-Dynamic version display from CHANGELOG.json
-Branding guide for changing app name, logo, and favicon
-MIT License information
-Full local setup guide in README.md
-```
-
-### Security notes
-
-```text
-The app does not run uploaded files.
-Approved files are read as plain text or browser decoded image data.
-Risky file types are blocked before reading.
-Public mode allows TXT, MD, PDF, DOCX, PNG, JPG, JPEG, and WEBP only.
-```
-
-### Known notes
-
-```text
-Chrome built in AI must be available in the user's Chrome setup.
-Image input depends on the Chrome Prompt API build.
-PDF and DOCX reading use browser loaded helper libraries.
-Open the app through localhost, not file://.
-```
+- Local Chrome AI chat workspace.
+- Chat history saved in browser localStorage.
+- Chat search, rename, export, import, and trash.
+- Dark mode, light mode, compact mode, and regular mode.
+- Voice to text input.
+- Stop generation button.
+- Reload resume for unfinished text prompts.
+- Safe attachment support for TXT, MD, PDF, DOCX, PNG, JPG, JPEG, and WEBP.
+- Strict public file guard.
+- Dynamic version display from `CHANGELOG.json`.
+- Local setup guide.
+- MIT License.
